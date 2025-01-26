@@ -8,6 +8,7 @@ const MoviesPage = lazy(() => import("../pages/MoviesPage"));
 const MovieDetails = lazy(() => import("../pages/MoviesDetailsPage"));
 const MovieCast = lazy(() => import("./MovieCast/MovieCast"));
 const MovieReviews = lazy(() => import("./MovieReviews/MovieReviews"));
+const NotFoundPage = lazy(() => import("../pages/NotFoundPage"));
 
 function App() {
   const [topRatedMovies, setTopRatedMovies] = useState([]);
@@ -26,12 +27,12 @@ function App() {
   }, []);
 
   if (topRatedMovies.length === 0) {
-    return <h2>Loading...</h2>;
+    return <NotFoundPage />;
   }
 
   return (
     <div>
-      <Suspense fallback={<h2>Loading...</h2>}>
+      <Suspense fallback={<NotFoundPage />}>
         <Routes>
           <Route path="/" element={<HomePage movies={topRatedMovies} />} />
           <Route path="/movies" element={<MoviesPage />} />
@@ -39,6 +40,7 @@ function App() {
             <Route path="cast" element={<MovieCast />} />
             <Route path="reviews" element={<MovieReviews />} />
           </Route>
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
     </div>

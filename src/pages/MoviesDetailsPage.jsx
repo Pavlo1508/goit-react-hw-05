@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 import { fetchMovieDetails } from "../services/api";
 import {
   Link,
@@ -8,6 +8,8 @@ import {
   useNavigate,
 } from "react-router-dom";
 import Navigation from "../components/Navigation/Navigation";
+
+const NotFoundPage = lazy(() => import("../pages/NotFoundPage"));
 
 const MovieDetails = () => {
 	const { movieId } = useParams();
@@ -24,7 +26,7 @@ const MovieDetails = () => {
   }, [movieId]);
 
   if (!movie) {
-    return <h2>Loading...</h2>;
+    return <NotFoundPage />;
 	}
 	
 	const handleGoBack = () => {
