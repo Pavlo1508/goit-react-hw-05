@@ -25,6 +25,22 @@ export const fetchMovies = async (query) => {
   }
 };
 
+export const fetchTopRatedMovies = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/movie/top_rated`, {
+      params: {
+        api_key: API_KEY,
+        language: "en-US",
+        page: 1,
+      },
+    });
+    return response.data.results;
+  } catch (error) {
+    console.error("Error fetching top-rated movies:", error);
+    return [];
+  }
+};
+
 export const fetchMovieDetails = async (movieId) => {
   try {
     const response = await axios.get(`${BASE_URL}/movie/${movieId}`, {
@@ -54,3 +70,20 @@ export const fetchMovieCast = async (movieId) => {
     return [];
   }
 };
+
+export const fetchMovieReviews = async (movieId) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/movie/${movieId}/reviews`, {
+      params: {
+        api_key: API_KEY,
+        language: "en-US",
+        page: 1,
+      },
+    });
+    return response.data.results;
+  } catch (error) {
+    console.error("Error fetching movie reviews:", error);
+    return [];
+  }
+};
+

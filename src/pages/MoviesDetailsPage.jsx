@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
 import { fetchMovieDetails } from "../services/api";
-import { Link, useParams, Outlet } from "react-router-dom";
+import {
+  Link,
+  useParams,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import Navigation from "../components/Navigation/Navigation";
 
 const MovieDetails = () => {
-  const { movieId } = useParams();
+	const { movieId } = useParams();
+	const location = useLocation();
+	const navigate = useNavigate();
   const [movie, setMovie] = useState(null);
 
   useEffect(() => {
@@ -17,11 +25,25 @@ const MovieDetails = () => {
 
   if (!movie) {
     return <h2>Loading...</h2>;
-  }
+	}
+	
+	const handleGoBack = () => {
+    if (location.state?.from === "/movies") {
+      navigate("/movies", {
+        state: {
+          query: location.state.query,
+          movies: location.state.movies,
+        },
+      });
+    } else {
+      navigate("/");
+    }
+  };
 
   return (
-		<div>
-			<Navigation />
+    <div>
+      <Navigation />
+      <button onClick={handleGoBack}>Go back</button>
       <div>
         <img
           src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}

@@ -1,41 +1,46 @@
-import { useState, useEffect } from "react";
-import { fetchMovies } from "../services/api";
+
+import { Suspense, lazy, useState, useEffect } from "react";
+import { fetchTopRatedMovies } from "../services/api";
 import { Route, Routes } from "react-router-dom";
-import HomePage from "../pages/HomePage";
-import MoviesPage from "../pages/MoviesPage";
-import MovieDetails from "../pages/MoviesDetailsPage";
-import MovieCast from "./MovieCast/MovieCast";
+
+const HomePage = lazy(() => import("../pages/HomePage"));
+const MoviesPage = lazy(() => import("../pages/MoviesPage"));
+const MovieDetails = lazy(() => import("../pages/MoviesDetailsPage"));
+const MovieCast = lazy(() => import("./MovieCast/MovieCast"));
+const MovieReviews = lazy(() => import("./MovieReviews/MovieReviews"));
 
 function App() {
-  const [movies, setMovies] = useState([]);
-  const [query, setQuery] = useState("Lion");
+  const [topRatedMovies, setTopRatedMovies] = useState([]);
 
   useEffect(() => {
-    const getMovies = async () => {
+    const getTopRatedMovies = async () => {
       try {
-        const fetchedMovies = await fetchMovies(query);
-        setMovies(fetchedMovies);
+        const fetchedMovies = await fetchTopRatedMovies();
+        setTopRatedMovies(fetchedMovies);
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching top-rated movies:", error);
       }
     };
 
-    getMovies();
-  }, [query]);
+    getTopRatedMovies();
+  }, []);
 
-  if (movies.length === 0) {
+  if (topRatedMovies.length === 0) {
     return <h2>Loading...</h2>;
   }
 
   return (
     <div>
-      <Routes>
-        <Route path="/" element={<HomePage movies={movies} />} />
-        <Route path="/movies" element={<MoviesPage movies={movies} />} />
-        <Route path="/movies/:movieId" element={<MovieDetails />}>
-          <Route path="cast" element={<MovieCast />} />
-        </Route>
-      </Routes>
+      <Suspense fallback={<h2>Loading...</h2>}>
+        <Routes>
+          <Route path="/" element={<HomePage movies={topRatedMovies} />} />
+          <Route path="/movies" element={<MoviesPage />} />
+          <Route path="/movies/:movieId" element={<MovieDetails />}>
+            <Route path="cast" element={<MovieCast />} />
+            <Route path="reviews" element={<MovieReviews />} />
+          </Route>
+        </Routes>
+      </Suspense>
     </div>
   );
 }

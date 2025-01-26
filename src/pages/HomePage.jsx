@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
-import Navigation from "../components/Navigation/Navigation"
+import Navigation from "../components/Navigation/Navigation";
 
 const HomePage = ({ movies }) => {
-	
-	return (
+  return (
     <div>
       <section>
         <Navigation />
@@ -13,13 +12,18 @@ const HomePage = ({ movies }) => {
         <ul>
           {movies.map((movie) => (
             <li key={movie.id.toString()}>
-              <Link to={`/movies/${movie.id}`}>{movie.original_title}</Link>
+              <Link
+                to={`/movies/${movie.id}`}
+                state={{ from: "/" }}
+              >
+                {movie.original_title}
+              </Link>
             </li>
           ))}
         </ul>
       </section>
     </div>
   );
-}
+};
 
 export default HomePage;
