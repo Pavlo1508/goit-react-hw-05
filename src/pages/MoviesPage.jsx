@@ -1,61 +1,55 @@
-import { useState, useEffect, useCallback } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import Navigation from "../components/Navigation/Navigation";
 import { fetchMovies } from "../services/api";
+import MovieList from "../components/MovieList/MovieList";
 
 const MoviesPage = () => {
-  const location = useLocation();
-  const [query, setQuery] = useState(location.state?.query || "");
-  const [movies, setMovies] = useState(location.state?.movies || []);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("query") || "";"query"
+  const [movies, setMovies] = useState([]);
 
-  const handleSearch = useCallback(async () => {
-    if (query.trim() === "") return;
-    try {
-      const fetchedMovies = await fetchMovies(query);
-      setMovies(fetchedMovies);
-    } catch (error) {
-      console.error("Error fetching movies:", error);
+  useEffect(() => {
+    if (query) {
+      const getMovies = async () => {
+        try {
+          const fetchedMovies = await fetchMovies(query);
+          setMovies(fetchedMovies);
+        } catch (error) {
+          console.error("Error fetching movies:", error);
+        }
+      };
+      getMovies();
+    } else {
+      setMovies([]);
     }
   }, [query]);
 
-  useEffect(() => {
-    if (location.state?.query && !movies.length) {
-      handleSearch();
-    }
-	}, [location.state, handleSearch, movies.length]);
-	
-	const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      handleSearch();
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const searchQuery = form.elements.search.value.trim();
+    if (searchQuery) {
+      setSearchParams({ query: searchQuery });
     }
   };
 
   return (
     <div>
       <Navigation />
-      <div>
+      <form onSubmit={handleSearch}>
         <input
           type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={handleKeyDown}
+          name="search"
+          defaultValue={query}
           placeholder="Search for movies..."
         />
-        <button onClick={handleSearch}>Search</button>
-      </div>
-      {movies.length > 0 && (
-        <ul>
-          {movies.map((movie) => (
-            <li key={movie.id}>
-              <Link
-                to={`/movies/${movie.id}`}
-                state={{ from: "/movies", query, movies }}
-              >
-                {movie.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <button type="submit">Search</button>
+      </form>
+      {movies.length > 0 ? (
+        <MovieList movies={movies} />
+      ) : (
+        <p>Please enter the movie title.</p>
       )}
     </div>
   );

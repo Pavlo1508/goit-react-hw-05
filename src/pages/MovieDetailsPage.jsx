@@ -9,12 +9,12 @@ import {
 } from "react-router-dom";
 import Navigation from "../components/Navigation/Navigation";
 
-const NotFoundPage = lazy(() => import("../pages/NotFoundPage"));
+const NotFoundPage = lazy(() => import("./NotFoundPage"));
 
 const MovieDetails = () => {
-	const { movieId } = useParams();
-	const location = useLocation();
-	const navigate = useNavigate();
+  const { movieId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [movie, setMovie] = useState(null);
 
   useEffect(() => {
@@ -27,16 +27,11 @@ const MovieDetails = () => {
 
   if (!movie) {
     return <NotFoundPage />;
-	}
-	
-	const handleGoBack = () => {
-    if (location.state?.from === "/movies") {
-      navigate("/movies", {
-        state: {
-          query: location.state.query,
-          movies: location.state.movies,
-        },
-      });
+  }
+
+  const handleGoBack = () => {
+    if (location.state?.from) {
+      navigate(location.state.from, { state: location.state });
     } else {
       navigate("/");
     }
