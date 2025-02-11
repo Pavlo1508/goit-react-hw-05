@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { fetchTopRatedMovies } from "../services/api";
-import Navigation from "../components/Navigation/Navigation";
 import MovieList from "../components/MovieList/MovieList";
 
 const HomePage = () => {
@@ -25,9 +24,6 @@ const HomePage = () => {
 
   return (
     <div>
-      <section>
-        <Navigation />
-      </section>
       <section>
         <h1>Trending today</h1>
         <MovieList movies={movies} />

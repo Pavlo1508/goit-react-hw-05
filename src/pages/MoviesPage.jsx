@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import Navigation from "../components/Navigation/Navigation";
 import { fetchMovies } from "../services/api";
 import MovieList from "../components/MovieList/MovieList";
 
@@ -36,7 +35,6 @@ const MoviesPage = () => {
 
   return (
     <div>
-      <Navigation />
       <form onSubmit={handleSearch}>
         <input
           type="text"

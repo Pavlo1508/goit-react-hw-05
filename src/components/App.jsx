@@ -1,6 +1,7 @@
 import { Suspense, lazy, useState, useEffect } from "react";
 import { fetchTopRatedMovies } from "../services/api";
 import { Route, Routes } from "react-router-dom";
+import Navigation from "./Navigation/Navigation";
 
 const HomePage = lazy(() => import("../pages/HomePage"));
 const MoviesPage = lazy(() => import("../pages/MoviesPage"));
@@ -31,7 +32,8 @@ function App() {
 
   return (
     <div>
-      <Suspense fallback={<div>Loading...</div>}>
+			<Suspense fallback={<div>Loading...</div>}>
+				<Navigation />
         <Routes>
           <Route path="/" element={<HomePage movies={topRatedMovies} />} />
           <Route path="/movies" element={<MoviesPage />} />

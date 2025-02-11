@@ -7,7 +7,6 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import Navigation from "../components/Navigation/Navigation";
 
 const NotFoundPage = lazy(() => import("./NotFoundPage"));
 
@@ -39,7 +38,6 @@ const MovieDetails = () => {
 
   return (
     <div>
-      <Navigation />
       <button onClick={handleGoBack}>Go back</button>
       <div>
         <img
